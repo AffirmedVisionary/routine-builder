@@ -1,0 +1,1452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Playful Time-Aware Routine Builder</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+        
+        .activity-bar {
+            transition: all 0.3s ease;
+            cursor: pointer;
+            min-height: 20px;
+        }
+        
+        .activity-bar:hover {
+            transform: scale(1.02);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        .free-time-block {
+            border: 2px dashed #d1d5db;
+            background: repeating-linear-gradient(
+                45deg,
+                transparent,
+                transparent 10px,
+                rgba(156, 163, 175, 0.1) 10px,
+                rgba(156, 163, 175, 0.1) 20px
+            );
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .free-time-block:hover {
+            background-color: rgba(59, 130, 246, 0.1);
+            border-color: #3b82f6;
+        }
+        
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background: #f59e0b;
+            animation: confetti-fall 3s linear infinite;
+        }
+        
+        @keyframes confetti-fall {
+            to {
+                transform: translateY(100vh) rotate(360deg);
+            }
+        }
+        
+        .slide-in {
+            animation: slideIn 0.5s ease-out;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .fade-out {
+            animation: fadeOut 0.3s ease-out forwards;
+        }
+        
+        @keyframes fadeOut {
+            to {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+        }
+        
+        .success-check {
+            animation: successPulse 0.6s ease-out;
+        }
+        
+        @keyframes successPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        
+        .calendar-container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 16px;
+        }
+        
+        .calendar-grid {
+            display: grid;
+            gap: 20px;
+            grid-template-columns: 60px 1fr;
+        }
+        
+        .time-rail {
+            position: sticky;
+            top: 120px;
+            z-index: 30;
+            background: white;
+            border-right: 1px solid #e5e7eb;
+            padding-right: 12px;
+        }
+        
+        .time-label {
+            height: 60px;
+            display: flex;
+            align-items: flex-start;
+            font-size: 12px;
+            color: #6b7280;
+            padding-top: 4px;
+        }
+        
+        .days-grid {
+            display: grid;
+            gap: 16px;
+            position: relative;
+        }
+        
+        .grid-lines {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        .grid-line {
+            height: 1px;
+            background: #f3f4f6;
+            margin-bottom: 59px;
+        }
+        
+        .day-column {
+            position: relative;
+            z-index: 2;
+        }
+        
+        .day-header {
+            position: sticky;
+            top: 120px;
+            background: white;
+            z-index: 20;
+            padding: 12px 0;
+            border-bottom: 2px solid #e5e7eb;
+            margin-bottom: 8px;
+            font-weight: 600;
+            text-align: center;
+            color: #374151;
+        }
+        
+        .day-content {
+            position: relative;
+            min-height: 960px;
+        }
+        
+        .activity-card {
+            position: absolute;
+            left: 0;
+            right: 0;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            border-left: 4px solid;
+            padding: 8px 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            z-index: 10;
+        }
+        
+        .activity-card:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        .activity-card.overlapped {
+            left: 8px;
+            right: 8px;
+            z-index: 11;
+        }
+        
+        .activity-title {
+            font-weight: 500;
+            font-size: 14px;
+            line-height: 1.3;
+            word-wrap: break-word;
+        }
+        
+        .activity-time {
+            font-size: 12px;
+            color: #6b7280;
+            line-height: 1.2;
+        }
+        
+        .free-time-block {
+            position: absolute;
+            left: 0;
+            right: 0;
+            background: rgba(156, 163, 175, 0.1);
+            border: 2px dashed #d1d5db;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            z-index: 5;
+        }
+        
+        .free-time-block:hover {
+            background: rgba(59, 130, 246, 0.1);
+            border-color: #3b82f6;
+        }
+        
+        .free-time-content {
+            text-align: center;
+            color: #6b7280;
+            font-size: 12px;
+        }
+        
+        .showing-free-time .activity-card {
+            opacity: 0.6;
+        }
+        
+        .showing-free-time .free-time-block {
+            background: rgba(59, 130, 246, 0.15);
+            border-color: #3b82f6;
+        }
+        
+        .expand-hours-btn {
+            position: sticky;
+            top: 180px;
+            z-index: 25;
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            padding: 4px 8px;
+            font-size: 11px;
+            color: #6b7280;
+            cursor: pointer;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+        
+        .expand-hours-btn:hover {
+            background: #f9fafb;
+            border-color: #d1d5db;
+        }
+        
+        /* Responsive Grid */
+        @media (min-width: 1024px) {
+            .days-grid {
+                grid-template-columns: repeat(7, 1fr);
+            }
+        }
+        
+        @media (min-width: 640px) and (max-width: 1023px) {
+            .days-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+        
+        @media (max-width: 639px) {
+            .days-grid {
+                grid-template-columns: 1fr;
+            }
+            .calendar-container {
+                padding: 12px;
+            }
+            .calendar-grid {
+                gap: 12px;
+                grid-template-columns: 50px 1fr;
+            }
+        }
+        
+        .category-work { background-color: #3b82f6; color: white; }
+        .category-rest { background-color: #10b981; color: white; }
+        .category-selfcare { background-color: #f59e0b; color: white; }
+        .category-other { background-color: #8b5cf6; color: white; }
+        
+        .modal {
+            backdrop-filter: blur(4px);
+        }
+        
+        .donut-chart {
+            transform: rotate(-90deg);
+        }
+        
+        .tooltip {
+            visibility: hidden;
+            opacity: 0;
+            transition: all 0.3s ease;
+            pointer-events: none;
+        }
+        
+        .tooltip.show {
+            visibility: visible;
+            opacity: 1;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-purple-50 min-h-screen transition-colors duration-300" id="body">
+    <!-- Header -->
+    <header class="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <h1 class="text-2xl md:text-3xl font-bold text-gray-800">Weekly Routine Builder</h1>
+            <button id="themeToggle" class="p-2 rounded-lg bg-gray-100 hover:bg-gray-200 transition-colors" aria-label="Toggle theme">
+                <span id="themeIcon">🌙</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Motivation Banner -->
+    <div class="bg-gradient-to-r from-purple-500 to-blue-500 text-white py-3">
+        <div class="container mx-auto px-4 text-center">
+            <p id="motivationText" class="font-medium">Building great routines takes time - you're doing amazing!</p>
+        </div>
+    </div>
+
+    <div class="container mx-auto px-4 py-8 pb-16 max-w-7xl">
+        <!-- Setup Form -->
+        <div class="bg-white rounded-2xl shadow-lg p-6 mb-8">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-6">Add Your Activities</h2>
+            
+            <form id="activityForm" class="space-y-4">
+                <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Day</label>
+                        <select id="daySelect" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                            <option value="monday">Monday</option>
+                            <option value="tuesday">Tuesday</option>
+                            <option value="wednesday">Wednesday</option>
+                            <option value="thursday">Thursday</option>
+                            <option value="friday">Friday</option>
+                            <option value="saturday">Saturday</option>
+                            <option value="sunday">Sunday</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Activity Name</label>
+                        <input type="text" id="activityName" placeholder="e.g., Morning workout" 
+                               class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" required>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Category</label>
+                        <select id="categorySelect" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                            <option value="work">Work/Business</option>
+                            <option value="rest">Rest</option>
+                            <option value="selfcare">Self-Care</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Start</label>
+                            <input type="time" id="startTime" class="w-full px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" required>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">End</label>
+                            <input type="time" id="endTime" class="w-full px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" required>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="timeValidation" class="text-red-600 text-sm hidden"></div>
+                
+                <div class="flex gap-4">
+                    <button type="submit" class="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-200 min-w-44 min-h-11">
+                        Add Activity
+                    </button>
+                    <button type="button" id="buildWeek" class="bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-200 min-w-44 min-h-11">
+                        Build My Week
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Controls -->
+        <div class="flex flex-wrap gap-4 mb-8">
+            <button id="viewFreeTime" class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 min-w-44 min-h-11">
+                View Free Time
+            </button>
+            <button id="showSummary" class="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 min-w-44 min-h-11">
+                Weekly Summary
+            </button>
+            <button id="resetWeek" class="bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 min-w-44 min-h-11">
+                Reset My Week
+            </button>
+            <button id="exportWeek" class="bg-gray-600 hover:bg-gray-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 min-w-44 min-h-11">
+                Export Schedule
+            </button>
+        </div>
+
+        <!-- Calendar -->
+        <div class="bg-white rounded-2xl shadow-lg p-6 mb-8">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-6">Your Weekly Calendar</h2>
+            
+            <div class="calendar-container">
+                <div class="calendar-grid">
+                    <!-- Time Rail -->
+                    <div class="time-rail">
+                        <div class="expand-hours-btn" id="expandHours">
+                            <span id="expandText">Expand hours</span>
+                        </div>
+                        <div id="timeLabels">
+                            <!-- Time labels will be generated here -->
+                        </div>
+                    </div>
+                    
+                    <!-- Days Grid -->
+                    <div class="days-grid" id="daysGrid">
+                        <!-- Grid lines -->
+                        <div class="grid-lines" id="gridLines">
+                            <!-- Grid lines will be generated here -->
+                        </div>
+                        
+                        <!-- Day columns will be generated here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Weekly Summary Modal -->
+        <div id="summaryModal" class="fixed inset-0 bg-black bg-opacity-50 modal hidden z-50">
+            <div class="flex items-center justify-center min-h-screen p-4">
+                <div class="bg-white rounded-2xl shadow-xl max-w-4xl w-full max-h-90vh overflow-y-auto">
+                    <div class="p-6">
+                        <div class="flex justify-between items-center mb-6">
+                            <h2 class="text-2xl font-semibold text-gray-800">Weekly Summary</h2>
+                            <button id="closeSummary" class="text-gray-500 hover:text-gray-700 text-2xl min-w-11 min-h-11">&times;</button>
+                        </div>
+                        
+                        <!-- KPIs -->
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+                            <div class="bg-blue-50 p-4 rounded-lg text-center">
+                                <div class="text-2xl font-bold text-blue-600" id="totalScheduled">0h</div>
+                                <div class="text-sm text-gray-600">Scheduled Hours</div>
+                            </div>
+                            <div class="bg-green-50 p-4 rounded-lg text-center">
+                                <div class="text-2xl font-bold text-green-600" id="totalFree">0h</div>
+                                <div class="text-sm text-gray-600">Free Hours</div>
+                            </div>
+                            <div class="bg-yellow-50 p-4 rounded-lg text-center">
+                                <div class="text-2xl font-bold text-yellow-600" id="longestFree">0h</div>
+                                <div class="text-sm text-gray-600">Longest Free Block</div>
+                            </div>
+                            <div class="bg-purple-50 p-4 rounded-lg text-center">
+                                <div class="text-2xl font-bold text-purple-600" id="busiestDay">-</div>
+                                <div class="text-sm text-gray-600">Busiest Day</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Category Breakdown -->
+                        <div class="grid md:grid-cols-2 gap-8 mb-8">
+                            <div>
+                                <h3 class="text-lg font-semibold mb-4">Time by Category</h3>
+                                <div class="space-y-3" id="categoryBreakdown">
+                                    <!-- Category bars will be generated here -->
+                                </div>
+                            </div>
+                            <div class="flex justify-center items-center">
+                                <div class="relative">
+                                    <svg width="200" height="200" class="donut-chart">
+                                        <circle cx="100" cy="100" r="80" fill="none" stroke="#e5e7eb" stroke-width="20"/>
+                                        <circle id="workArc" cx="100" cy="100" r="80" fill="none" stroke="#3b82f6" stroke-width="20" stroke-dasharray="0 502" stroke-linecap="round"/>
+                                        <circle id="restArc" cx="100" cy="100" r="80" fill="none" stroke="#10b981" stroke-width="20" stroke-dasharray="0 502" stroke-linecap="round"/>
+                                        <circle id="selfcareArc" cx="100" cy="100" r="80" fill="none" stroke="#f59e0b" stroke-width="20" stroke-dasharray="0 502" stroke-linecap="round"/>
+                                        <circle id="otherArc" cx="100" cy="100" r="80" fill="none" stroke="#8b5cf6" stroke-width="20" stroke-dasharray="0 502" stroke-linecap="round"/>
+                                    </svg>
+                                    <div class="absolute inset-0 flex items-center justify-center">
+                                        <div class="text-center">
+                                            <div class="text-2xl font-bold text-gray-800" id="totalHours">0h</div>
+                                            <div class="text-sm text-gray-600">Total</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Suggestions -->
+                        <div class="bg-gradient-to-r from-purple-50 to-blue-50 p-6 rounded-lg">
+                            <h3 class="text-lg font-semibold mb-3">Suggestions for Better Balance</h3>
+                            <div id="suggestions" class="space-y-2">
+                                <!-- Suggestions will be generated here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Help Modal -->
+        <div id="helpModal" class="fixed inset-0 bg-black bg-opacity-50 modal hidden z-50">
+            <div class="flex items-center justify-center min-h-screen p-4">
+                <div class="bg-white rounded-2xl shadow-xl max-w-2xl w-full">
+                    <div class="p-6">
+                        <div class="flex justify-between items-center mb-6">
+                            <h2 class="text-2xl font-semibold text-gray-800">How to Use This App</h2>
+                            <button id="closeHelp" class="text-gray-500 hover:text-gray-700 text-2xl min-w-11 min-h-11">&times;</button>
+                        </div>
+                        
+                        <div class="space-y-4 text-gray-700">
+                            <p><strong>1.</strong> Add your weekly activities with start and end times and choose a category.</p>
+                            <p><strong>2.</strong> Click Build My Week to generate your calendar.</p>
+                            <p><strong>3.</strong> Toggle View Free Time to see open blocks and assign an intention.</p>
+                            <p><strong>4.</strong> Open Weekly Summary to review where your time goes and spot balance opportunities.</p>
+                            <p><strong>5.</strong> Edit any activity by selecting its block; use Reset My Week to start over.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contact Modal -->
+        <div id="contactModal" class="fixed inset-0 bg-black bg-opacity-50 modal hidden z-50">
+            <div class="flex items-center justify-center min-h-screen p-4">
+                <div class="bg-white rounded-2xl shadow-xl max-w-md w-full">
+                    <div class="p-6">
+                        <div class="flex justify-between items-center mb-6">
+                            <h2 class="text-2xl font-semibold text-gray-800">Contact for Help</h2>
+                            <button id="closeContact" class="text-gray-500 hover:text-gray-700 text-2xl min-w-11 min-h-11">&times;</button>
+                        </div>
+                        
+                        <div class="text-gray-700">
+                            <p class="mb-4">Need help with the app? Contact our support team:</p>
+                            <p class="font-medium">your-support-link.com</p>
+                            <p class="text-sm text-gray-500 mt-4">For best performance, keep your device and browser up to date and maintain a stable internet connection.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Edit Activity Modal -->
+        <div id="editActivityModal" class="fixed inset-0 bg-black bg-opacity-50 modal hidden z-50">
+            <div class="flex items-center justify-center min-h-screen p-4">
+                <div class="bg-white rounded-2xl shadow-xl max-w-md w-full">
+                    <div class="p-6">
+                        <div class="flex justify-between items-center mb-6">
+                            <h2 class="text-2xl font-semibold text-gray-800">Edit Activity</h2>
+                            <button id="closeEditActivity" class="text-gray-500 hover:text-gray-700 text-2xl min-w-11 min-h-11">&times;</button>
+                        </div>
+                        
+                        <form id="editActivityForm" class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Day</label>
+                                <select id="editDaySelect" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                                    <option value="monday">Monday</option>
+                                    <option value="tuesday">Tuesday</option>
+                                    <option value="wednesday">Wednesday</option>
+                                    <option value="thursday">Thursday</option>
+                                    <option value="friday">Friday</option>
+                                    <option value="saturday">Saturday</option>
+                                    <option value="sunday">Sunday</option>
+                                </select>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Activity Name</label>
+                                <input type="text" id="editActivityName" placeholder="e.g., Morning workout" 
+                                       class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" required>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Category</label>
+                                <select id="editCategorySelect" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                                    <option value="work">Work/Business</option>
+                                    <option value="rest">Rest</option>
+                                    <option value="selfcare">Self-Care</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                            
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Start</label>
+                                    <input type="time" id="editStartTime" class="w-full px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" required>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">End</label>
+                                    <input type="time" id="editEndTime" class="w-full px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" required>
+                                </div>
+                            </div>
+                            
+                            <div id="editTimeValidation" class="text-red-600 text-sm hidden"></div>
+                            
+                            <div class="flex gap-3 pt-4">
+                                <button type="submit" class="flex-1 bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-200">
+                                    Save Changes
+                                </button>
+                                <button type="button" id="deleteActivity" class="flex-1 bg-red-600 hover:bg-red-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-200">
+                                    Delete Activity
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tooltip -->
+        <div id="tooltip" class="tooltip absolute bg-gray-800 text-white px-3 py-2 rounded-lg text-sm z-50">
+            <div id="tooltipContent"></div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-gray-200 py-6">
+        <div class="container mx-auto px-4 text-center">
+            <div class="flex justify-center gap-4">
+                <button id="showHelp" class="text-blue-600 hover:text-blue-700 font-medium min-w-44 min-h-11">How to Use This App</button>
+                <button id="showContact" class="text-blue-600 hover:text-blue-700 font-medium min-w-44 min-h-11">Contact for Help</button>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Global state
+        let activities = JSON.parse(localStorage.getItem('weeklyActivities') || '[]');
+        let activityId = parseInt(localStorage.getItem('activityId') || '0');
+        let isDarkMode = localStorage.getItem('darkMode') === 'true';
+        let showingFreeTime = false;
+        let hasCompletedWeek = false;
+        let expandedHours = false;
+
+        // Motivation messages
+        const motivationMessages = [
+            "Building great routines takes time - you're doing amazing!",
+            "Every small step towards better planning counts!",
+            "Your future self will thank you for this organization!",
+            "Consistency is key - keep building those healthy habits!",
+            "You're creating the foundation for a more balanced life!",
+            "Planning ahead is a superpower - you've got this!",
+            "Small changes in routine can lead to big improvements!"
+        ];
+
+        // Initialize app
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeTheme();
+            generateCalendar();
+            renderActivities();
+            startMotivationRotation();
+            setupEventListeners();
+            checkWeekCompletion();
+        });
+
+        function initializeTheme() {
+            if (isDarkMode) {
+                document.body.classList.add('dark');
+                document.getElementById('themeIcon').textContent = '☀️';
+            }
+        }
+
+        function startMotivationRotation() {
+            let currentIndex = 0;
+            setInterval(() => {
+                currentIndex = (currentIndex + 1) % motivationMessages.length;
+                document.getElementById('motivationText').textContent = motivationMessages[currentIndex];
+            }, 5000);
+        }
+
+        function setupEventListeners() {
+            // Form submission
+            document.getElementById('activityForm').addEventListener('submit', handleActivitySubmit);
+            
+            // Time validation
+            document.getElementById('startTime').addEventListener('change', validateTimes);
+            document.getElementById('endTime').addEventListener('change', validateTimes);
+            
+            // Control buttons
+            document.getElementById('buildWeek').addEventListener('click', buildWeek);
+            document.getElementById('viewFreeTime').addEventListener('click', toggleFreeTime);
+            document.getElementById('showSummary').addEventListener('click', showWeeklySummary);
+            document.getElementById('resetWeek').addEventListener('click', resetWeek);
+            document.getElementById('exportWeek').addEventListener('click', exportWeek);
+            
+            // Theme toggle
+            document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+            
+            // Expand hours toggle
+            document.getElementById('expandHours').addEventListener('click', toggleExpandHours);
+            
+            // Modal controls
+            document.getElementById('closeSummary').addEventListener('click', () => hideModal('summaryModal'));
+            document.getElementById('showHelp').addEventListener('click', () => showModal('helpModal'));
+            document.getElementById('closeHelp').addEventListener('click', () => hideModal('helpModal'));
+            document.getElementById('showContact').addEventListener('click', () => showModal('contactModal'));
+            document.getElementById('closeContact').addEventListener('click', () => hideModal('contactModal'));
+            document.getElementById('closeEditActivity').addEventListener('click', () => hideModal('editActivityModal'));
+            
+            // Edit activity form
+            document.getElementById('editActivityForm').addEventListener('submit', handleEditActivitySubmit);
+            document.getElementById('deleteActivity').addEventListener('click', handleDeleteActivity);
+            document.getElementById('editStartTime').addEventListener('change', validateEditTimes);
+            document.getElementById('editEndTime').addEventListener('change', validateEditTimes);
+            
+            // Close modals on backdrop click
+            document.querySelectorAll('.modal').forEach(modal => {
+                modal.addEventListener('click', (e) => {
+                    if (e.target === modal) {
+                        hideModal(modal.id);
+                    }
+                });
+            });
+        }
+
+        function handleActivitySubmit(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('activityName').value.trim();
+            const day = document.getElementById('daySelect').value;
+            const category = document.getElementById('categorySelect').value;
+            const startTime = document.getElementById('startTime').value;
+            const endTime = document.getElementById('endTime').value;
+            
+            if (!validateTimes()) return;
+            
+            const activity = {
+                id: activityId++,
+                name,
+                day,
+                category,
+                startTime,
+                endTime
+            };
+            
+            activities.push(activity);
+            saveData();
+            renderActivities();
+            
+            // Clear form
+            document.getElementById('activityForm').reset();
+            
+            // Success animation
+            const submitBtn = document.querySelector('button[type="submit"]');
+            submitBtn.classList.add('success-check');
+            setTimeout(() => submitBtn.classList.remove('success-check'), 600);
+            
+            checkWeekCompletion();
+        }
+
+        function validateTimes() {
+            const startTime = document.getElementById('startTime').value;
+            const endTime = document.getElementById('endTime').value;
+            const validation = document.getElementById('timeValidation');
+            
+            if (startTime && endTime) {
+                if (startTime >= endTime) {
+                    validation.textContent = 'End time must be after start time';
+                    validation.classList.remove('hidden');
+                    return false;
+                }
+            }
+            
+            validation.classList.add('hidden');
+            return true;
+        }
+
+        function generateCalendar() {
+            generateTimeLabels();
+            generateGridLines();
+            generateDayColumns();
+        }
+
+        function generateTimeLabels() {
+            const container = document.getElementById('timeLabels');
+            const startHour = expandedHours ? 0 : 6;
+            const endHour = expandedHours ? 23 : 22;
+            
+            container.innerHTML = '';
+            
+            for (let hour = startHour; hour <= endHour; hour++) {
+                const label = document.createElement('div');
+                label.className = 'time-label';
+                
+                const displayHour = hour === 0 ? 12 : hour > 12 ? hour - 12 : hour;
+                const ampm = hour >= 12 ? 'PM' : 'AM';
+                label.textContent = `${displayHour}${ampm}`;
+                
+                container.appendChild(label);
+            }
+        }
+        
+        function generateGridLines() {
+            const container = document.getElementById('gridLines');
+            const startHour = expandedHours ? 0 : 6;
+            const endHour = expandedHours ? 23 : 22;
+            const totalHours = endHour - startHour + 1;
+            
+            container.innerHTML = '';
+            
+            for (let i = 0; i < totalHours; i++) {
+                const line = document.createElement('div');
+                line.className = 'grid-line';
+                container.appendChild(line);
+            }
+        }
+        
+        function generateDayColumns() {
+            const container = document.getElementById('daysGrid');
+            const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+            const dayNames = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+            
+            // Remove existing day columns (keep grid lines)
+            const existingColumns = container.querySelectorAll('.day-column');
+            existingColumns.forEach(col => col.remove());
+            
+            days.forEach((day, index) => {
+                const dayColumn = document.createElement('div');
+                dayColumn.className = 'day-column';
+                dayColumn.innerHTML = `
+                    <div class="day-header">${dayNames[index]}</div>
+                    <div class="day-content ${showingFreeTime ? 'showing-free-time' : ''}" id="${day}-activities">
+                        <!-- Activities will be rendered here -->
+                    </div>
+                `;
+                container.appendChild(dayColumn);
+            });
+        }
+        
+        function toggleExpandHours() {
+            expandedHours = !expandedHours;
+            const expandText = document.getElementById('expandText');
+            
+            if (expandedHours) {
+                expandText.textContent = 'Collapse hours';
+            } else {
+                expandText.textContent = 'Expand hours';
+            }
+            
+            generateCalendar();
+            renderActivities();
+        }
+
+        function renderActivities() {
+            const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+            
+            days.forEach(day => {
+                const container = document.getElementById(`${day}-activities`);
+                if (!container) return;
+                
+                // Clear existing activities but keep the container classes
+                container.innerHTML = '';
+                container.className = `day-content ${showingFreeTime ? 'showing-free-time' : ''}`;
+                
+                const dayActivities = activities
+                    .filter(activity => activity.day === day)
+                    .sort((a, b) => a.startTime.localeCompare(b.startTime));
+                
+                // Check for overlaps and render activities
+                const renderedActivities = [];
+                dayActivities.forEach(activity => {
+                    const activityElement = createActivityElement(activity, renderedActivities);
+                    container.appendChild(activityElement);
+                    renderedActivities.push({
+                        element: activityElement,
+                        startTime: activity.startTime,
+                        endTime: activity.endTime
+                    });
+                });
+                
+                if (showingFreeTime) {
+                    renderFreeTimeBlocks(day, dayActivities);
+                }
+            });
+        }
+
+        function createActivityElement(activity, renderedActivities = []) {
+            const startMinutes = timeToMinutes(activity.startTime);
+            const endMinutes = timeToMinutes(activity.endTime);
+            const duration = endMinutes - startMinutes;
+            
+            const baseHour = expandedHours ? 0 : 6;
+            const baseMinutes = baseHour * 60;
+            const topPosition = (startMinutes - baseMinutes);
+            
+            // Check for overlaps
+            const hasOverlap = renderedActivities.some(rendered => {
+                const renderedStart = timeToMinutes(rendered.startTime);
+                const renderedEnd = timeToMinutes(rendered.endTime);
+                return (startMinutes < renderedEnd && endMinutes > renderedStart);
+            });
+            
+            const div = document.createElement('div');
+            div.className = `activity-card ${hasOverlap ? 'overlapped' : ''}`;
+            
+            // Set border color based on category
+            const categoryColors = {
+                work: '#3b82f6',
+                rest: '#10b981', 
+                selfcare: '#f59e0b',
+                other: '#8b5cf6'
+            };
+            
+            div.style.borderLeftColor = categoryColors[activity.category];
+            div.style.top = `${Math.max(0, topPosition)}px`;
+            div.style.height = `${duration}px`;
+            
+            div.innerHTML = `
+                <div class="activity-title">${activity.name}</div>
+            `;
+            
+            // Tooltip
+            div.addEventListener('mouseenter', (e) => showTooltip(e, activity));
+            div.addEventListener('mouseleave', hideTooltip);
+            
+            // Click to edit/delete
+            div.addEventListener('click', () => editActivity(activity));
+            
+            return div;
+        }
+
+        function renderFreeTimeBlocks(day, dayActivities) {
+            const container = document.getElementById(`${day}-activities`);
+            
+            // Find gaps between activities
+            const gaps = findFreeTimeGaps(dayActivities);
+            
+            gaps.forEach(gap => {
+                const baseHour = expandedHours ? 0 : 6;
+                const baseMinutes = baseHour * 60;
+                const topPosition = gap.start - baseMinutes;
+                
+                const freeBlock = document.createElement('div');
+                freeBlock.className = 'free-time-block';
+                freeBlock.style.top = `${Math.max(0, topPosition)}px`;
+                freeBlock.style.height = `${gap.duration}px`;
+                
+                freeBlock.innerHTML = `
+                    <div class="free-time-content">
+                        <div class="font-medium">Free Time</div>
+                        <div>${Math.round(gap.duration / 60)}h ${gap.duration % 60}m</div>
+                    </div>
+                `;
+                
+                freeBlock.addEventListener('click', () => assignFreeTime(day, gap));
+                
+                container.appendChild(freeBlock);
+            });
+        }
+
+        function findFreeTimeGaps(dayActivities) {
+            const gaps = [];
+            const dayStart = expandedHours ? 0 : 360; // 12 AM or 6 AM
+            const dayEnd = expandedHours ? 1440 : 1320; // 12 AM next day or 10 PM
+            
+            if (dayActivities.length === 0) {
+                gaps.push({ start: dayStart, end: dayEnd, duration: dayEnd - dayStart });
+                return gaps;
+            }
+            
+            // Sort activities by start time
+            const sorted = dayActivities.sort((a, b) => timeToMinutes(a.startTime) - timeToMinutes(b.startTime));
+            
+            // Check gap before first activity
+            const firstStart = timeToMinutes(sorted[0].startTime);
+            if (firstStart > dayStart) {
+                gaps.push({ start: dayStart, end: firstStart, duration: firstStart - dayStart });
+            }
+            
+            // Check gaps between activities
+            for (let i = 0; i < sorted.length - 1; i++) {
+                const currentEnd = timeToMinutes(sorted[i].endTime);
+                const nextStart = timeToMinutes(sorted[i + 1].startTime);
+                
+                if (nextStart > currentEnd) {
+                    gaps.push({ start: currentEnd, end: nextStart, duration: nextStart - currentEnd });
+                }
+            }
+            
+            // Check gap after last activity
+            const lastEnd = timeToMinutes(sorted[sorted.length - 1].endTime);
+            if (lastEnd < dayEnd) {
+                gaps.push({ start: lastEnd, end: dayEnd, duration: dayEnd - lastEnd });
+            }
+            
+            return gaps.filter(gap => gap.duration >= 30); // Only show gaps of 30+ minutes
+        }
+
+        function assignFreeTime(day, gap) {
+            const category = prompt('Assign this free time to:\n1. Rest\n2. Work/Business\n3. Self-Care\n\nEnter 1, 2, or 3:');
+            
+            const categoryMap = {
+                '1': 'rest',
+                '2': 'work',
+                '3': 'selfcare'
+            };
+            
+            if (categoryMap[category]) {
+                const startTime = minutesToTime(gap.start);
+                const endTime = minutesToTime(gap.end);
+                
+                const activity = {
+                    id: activityId++,
+                    name: `Free Time (${categoryMap[category]})`,
+                    day,
+                    category: categoryMap[category],
+                    startTime,
+                    endTime
+                };
+                
+                activities.push(activity);
+                saveData();
+                renderActivities();
+            }
+        }
+
+        let currentEditingActivity = null;
+
+        function editActivity(activity) {
+            currentEditingActivity = activity;
+            
+            // Populate the edit form
+            document.getElementById('editDaySelect').value = activity.day;
+            document.getElementById('editActivityName').value = activity.name;
+            document.getElementById('editCategorySelect').value = activity.category;
+            document.getElementById('editStartTime').value = activity.startTime;
+            document.getElementById('editEndTime').value = activity.endTime;
+            
+            // Clear any validation errors
+            document.getElementById('editTimeValidation').classList.add('hidden');
+            
+            // Show the modal
+            showModal('editActivityModal');
+        }
+
+        function handleEditActivitySubmit(e) {
+            e.preventDefault();
+            
+            if (!currentEditingActivity) return;
+            
+            const name = document.getElementById('editActivityName').value.trim();
+            const day = document.getElementById('editDaySelect').value;
+            const category = document.getElementById('editCategorySelect').value;
+            const startTime = document.getElementById('editStartTime').value;
+            const endTime = document.getElementById('editEndTime').value;
+            
+            if (!validateEditTimes()) return;
+            
+            // Update the activity
+            const activityIndex = activities.findIndex(a => a.id === currentEditingActivity.id);
+            if (activityIndex !== -1) {
+                activities[activityIndex] = {
+                    ...currentEditingActivity,
+                    name,
+                    day,
+                    category,
+                    startTime,
+                    endTime
+                };
+                
+                saveData();
+                renderActivities();
+                hideModal('editActivityModal');
+                currentEditingActivity = null;
+            }
+        }
+
+        function handleDeleteActivity() {
+            if (!currentEditingActivity) return;
+            
+            if (confirm(`Are you sure you want to delete "${currentEditingActivity.name}"?`)) {
+                activities = activities.filter(a => a.id !== currentEditingActivity.id);
+                saveData();
+                renderActivities();
+                hideModal('editActivityModal');
+                currentEditingActivity = null;
+            }
+        }
+
+        function validateEditTimes() {
+            const startTime = document.getElementById('editStartTime').value;
+            const endTime = document.getElementById('editEndTime').value;
+            const validation = document.getElementById('editTimeValidation');
+            
+            if (startTime && endTime) {
+                if (startTime >= endTime) {
+                    validation.textContent = 'End time must be after start time';
+                    validation.classList.remove('hidden');
+                    return false;
+                }
+            }
+            
+            validation.classList.add('hidden');
+            return true;
+        }
+
+        function buildWeek() {
+            renderActivities();
+            
+            // Success animation
+            const btn = document.getElementById('buildWeek');
+            btn.classList.add('success-check');
+            setTimeout(() => btn.classList.remove('success-check'), 600);
+            
+            checkWeekCompletion();
+        }
+
+        function toggleFreeTime() {
+            showingFreeTime = !showingFreeTime;
+            const btn = document.getElementById('viewFreeTime');
+            
+            if (showingFreeTime) {
+                btn.textContent = 'Hide Free Time';
+                btn.classList.remove('bg-blue-600', 'hover:bg-blue-700');
+                btn.classList.add('bg-orange-600', 'hover:bg-orange-700');
+            } else {
+                btn.textContent = 'View Free Time';
+                btn.classList.remove('bg-orange-600', 'hover:bg-orange-700');
+                btn.classList.add('bg-blue-600', 'hover:bg-blue-700');
+            }
+            
+            renderActivities();
+        }
+
+        function showWeeklySummary() {
+            calculateWeeklySummary();
+            showModal('summaryModal');
+        }
+
+        function calculateWeeklySummary() {
+            const categoryTotals = { work: 0, rest: 0, selfcare: 0, other: 0 };
+            const dayTotals = {};
+            let totalScheduled = 0;
+            let longestFreeBlock = 0;
+            let busiestDay = '';
+            let maxDayHours = 0;
+            
+            // Calculate category totals
+            activities.forEach(activity => {
+                const duration = timeToMinutes(activity.endTime) - timeToMinutes(activity.startTime);
+                const hours = duration / 60;
+                
+                categoryTotals[activity.category] += hours;
+                totalScheduled += hours;
+                
+                if (!dayTotals[activity.day]) dayTotals[activity.day] = 0;
+                dayTotals[activity.day] += hours;
+                
+                if (dayTotals[activity.day] > maxDayHours) {
+                    maxDayHours = dayTotals[activity.day];
+                    busiestDay = activity.day.charAt(0).toUpperCase() + activity.day.slice(1);
+                }
+            });
+            
+            // Calculate free time and longest free block
+            const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+            let totalFree = 0;
+            
+            days.forEach(day => {
+                const dayActivities = activities.filter(a => a.day === day);
+                const gaps = findFreeTimeGaps(dayActivities);
+                
+                gaps.forEach(gap => {
+                    const freeHours = gap.duration / 60;
+                    totalFree += freeHours;
+                    if (freeHours > longestFreeBlock) {
+                        longestFreeBlock = freeHours;
+                    }
+                });
+            });
+            
+            // Update UI
+            document.getElementById('totalScheduled').textContent = `${Math.round(totalScheduled)}h`;
+            document.getElementById('totalFree').textContent = `${Math.round(totalFree)}h`;
+            document.getElementById('longestFree').textContent = `${Math.round(longestFreeBlock)}h`;
+            document.getElementById('busiestDay').textContent = busiestDay || '-';
+            document.getElementById('totalHours').textContent = `${Math.round(totalScheduled)}h`;
+            
+            // Update category breakdown
+            updateCategoryBreakdown(categoryTotals);
+            updateDonutChart(categoryTotals, totalScheduled);
+            generateSuggestions(categoryTotals, totalScheduled);
+        }
+
+        function updateCategoryBreakdown(categoryTotals) {
+            const container = document.getElementById('categoryBreakdown');
+            const categories = [
+                { key: 'work', name: 'Work/Business', color: 'bg-blue-500' },
+                { key: 'rest', name: 'Rest', color: 'bg-green-500' },
+                { key: 'selfcare', name: 'Self-Care', color: 'bg-yellow-500' },
+                { key: 'other', name: 'Other', color: 'bg-purple-500' }
+            ];
+            
+            const total = Object.values(categoryTotals).reduce((sum, val) => sum + val, 0);
+            
+            container.innerHTML = categories.map(cat => {
+                const hours = categoryTotals[cat.key];
+                const percentage = total > 0 ? (hours / total) * 100 : 0;
+                
+                return `
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center">
+                            <div class="w-4 h-4 ${cat.color} rounded mr-3"></div>
+                            <span class="text-sm">${cat.name}</span>
+                        </div>
+                        <div class="text-sm font-medium">${Math.round(hours)}h (${Math.round(percentage)}%)</div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function updateDonutChart(categoryTotals, total) {
+            const circumference = 2 * Math.PI * 80; // radius = 80
+            const categories = ['work', 'rest', 'selfcare', 'other'];
+            let currentOffset = 0;
+            
+            categories.forEach(category => {
+                const hours = categoryTotals[category];
+                const percentage = total > 0 ? hours / total : 0;
+                const strokeDasharray = `${percentage * circumference} ${circumference}`;
+                const strokeDashoffset = -currentOffset * circumference;
+                
+                const arc = document.getElementById(`${category}Arc`);
+                arc.style.strokeDasharray = strokeDasharray;
+                arc.style.strokeDashoffset = strokeDashoffset;
+                
+                currentOffset += percentage;
+            });
+        }
+
+        function generateSuggestions(categoryTotals, totalScheduled) {
+            const container = document.getElementById('suggestions');
+            const suggestions = [];
+            
+            if (categoryTotals.rest < 8) {
+                suggestions.push('Consider adding more rest time - aim for at least 8 hours of rest per week.');
+            }
+            
+            if (categoryTotals.selfcare < 3) {
+                suggestions.push('Try to schedule some self-care activities - even 30 minutes a day makes a difference.');
+            }
+            
+            if (totalScheduled > 80) {
+                suggestions.push('Your schedule looks quite packed - consider if some activities could be shortened or rescheduled.');
+            }
+            
+            if (totalScheduled < 20) {
+                suggestions.push('You have plenty of free time - consider adding some structured activities or goals.');
+            }
+            
+            if (suggestions.length === 0) {
+                suggestions.push('Your schedule looks well-balanced! Keep up the great work.');
+            }
+            
+            container.innerHTML = suggestions.map(suggestion => 
+                `<div class="text-sm text-gray-700 bg-white p-3 rounded-lg">${suggestion}</div>`
+            ).join('');
+        }
+
+        function resetWeek() {
+            if (confirm('Are you sure you want to reset your entire week? This will delete all activities and cannot be undone.')) {
+                activities = [];
+                activityId = 0;
+                saveData();
+                renderActivities();
+                
+                // Clear any free time view
+                if (showingFreeTime) {
+                    toggleFreeTime();
+                }
+            }
+        }
+
+        function exportWeek() {
+            const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+            const dayNames = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+            
+            let exportText = '# My Weekly Schedule\n\n';
+            
+            days.forEach((day, index) => {
+                const dayActivities = activities
+                    .filter(activity => activity.day === day)
+                    .sort((a, b) => a.startTime.localeCompare(b.startTime));
+                
+                exportText += `## ${dayNames[index]}\n\n`;
+                
+                if (dayActivities.length === 0) {
+                    exportText += '*No scheduled activities*\n\n';
+                } else {
+                    dayActivities.forEach(activity => {
+                        const startFormatted = formatTime(activity.startTime);
+                        const endFormatted = formatTime(activity.endTime);
+                        const categoryEmoji = {
+                            work: '💼',
+                            rest: '😴',
+                            selfcare: '🧘',
+                            other: '📝'
+                        };
+                        
+                        exportText += `- **${startFormatted} - ${endFormatted}**: ${activity.name} ${categoryEmoji[activity.category]}\n`;
+                    });
+                    exportText += '\n';
+                }
+            });
+            
+            // Add summary section
+            const categoryTotals = { work: 0, rest: 0, selfcare: 0, other: 0 };
+            let totalScheduled = 0;
+            
+            activities.forEach(activity => {
+                const duration = timeToMinutes(activity.endTime) - timeToMinutes(activity.startTime);
+                const hours = duration / 60;
+                categoryTotals[activity.category] += hours;
+                totalScheduled += hours;
+            });
+            
+            exportText += '## Weekly Summary\n\n';
+            exportText += `**Total Scheduled Hours**: ${Math.round(totalScheduled)}h\n\n`;
+            exportText += '### Time by Category\n\n';
+            exportText += `- 💼 **Work/Business**: ${Math.round(categoryTotals.work)}h\n`;
+            exportText += `- 😴 **Rest**: ${Math.round(categoryTotals.rest)}h\n`;
+            exportText += `- 🧘 **Self-Care**: ${Math.round(categoryTotals.selfcare)}h\n`;
+            exportText += `- 📝 **Other**: ${Math.round(categoryTotals.other)}h\n\n`;
+            
+            exportText += '*Generated with Weekly Routine Builder*';
+            
+            // Copy to clipboard
+            navigator.clipboard.writeText(exportText).then(() => {
+                alert('Markdown schedule copied to clipboard! You can paste it into any markdown editor or note-taking app.');
+            }).catch(() => {
+                // Fallback: show in alert
+                alert('Your markdown schedule:\n\n' + exportText);
+            });
+        }
+
+        function toggleTheme() {
+            isDarkMode = !isDarkMode;
+            localStorage.setItem('darkMode', isDarkMode);
+            
+            const body = document.body;
+            const icon = document.getElementById('themeIcon');
+            
+            if (isDarkMode) {
+                body.classList.add('dark');
+                icon.textContent = '☀️';
+            } else {
+                body.classList.remove('dark');
+                icon.textContent = '🌙';
+            }
+        }
+
+        function checkWeekCompletion() {
+            const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+            const hasActivitiesAllDays = days.every(day => 
+                activities.some(activity => activity.day === day)
+            );
+            
+            if (hasActivitiesAllDays && !hasCompletedWeek) {
+                hasCompletedWeek = true;
+                triggerConfetti();
+            }
+        }
+
+        function triggerConfetti() {
+            const colors = ['#f59e0b', '#3b82f6', '#10b981', '#8b5cf6', '#ef4444'];
+            
+            for (let i = 0; i < 50; i++) {
+                setTimeout(() => {
+                    const confetti = document.createElement('div');
+                    confetti.className = 'confetti';
+                    confetti.style.left = Math.random() * 100 + 'vw';
+                    confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                    confetti.style.animationDelay = Math.random() * 3 + 's';
+                    document.body.appendChild(confetti);
+                    
+                    setTimeout(() => confetti.remove(), 3000);
+                }, i * 100);
+            }
+        }
+
+        function showTooltip(e, activity) {
+            const tooltip = document.getElementById('tooltip');
+            const content = document.getElementById('tooltipContent');
+            
+            const startFormatted = formatTime(activity.startTime);
+            const endFormatted = formatTime(activity.endTime);
+            const duration = timeToMinutes(activity.endTime) - timeToMinutes(activity.startTime);
+            const durationFormatted = `${Math.floor(duration / 60)}h ${duration % 60}m`;
+            
+            content.innerHTML = `
+                <div class="font-medium">${activity.name}</div>
+                <div class="text-xs">${startFormatted} - ${endFormatted}</div>
+                <div class="text-xs">Duration: ${durationFormatted}</div>
+                <div class="text-xs">Category: ${activity.category}</div>
+            `;
+            
+            tooltip.style.left = e.pageX + 10 + 'px';
+            tooltip.style.top = e.pageY - 10 + 'px';
+            tooltip.classList.add('show');
+        }
+
+        function hideTooltip() {
+            document.getElementById('tooltip').classList.remove('show');
+        }
+
+        function showModal(modalId) {
+            document.getElementById(modalId).classList.remove('hidden');
+        }
+
+        function hideModal(modalId) {
+            document.getElementById(modalId).classList.add('hidden');
+        }
+
+        // Utility functions
+        function timeToMinutes(timeString) {
+            const [hours, minutes] = timeString.split(':').map(Number);
+            return hours * 60 + minutes;
+        }
+
+        function minutesToTime(minutes) {
+            const hours = Math.floor(minutes / 60);
+            const mins = minutes % 60;
+            return `${hours.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}`;
+        }
+
+        function formatTime(timeString) {
+            const [hours, minutes] = timeString.split(':').map(Number);
+            const period = hours >= 12 ? 'PM' : 'AM';
+            const displayHours = hours > 12 ? hours - 12 : hours === 0 ? 12 : hours;
+            return `${displayHours}:${minutes.toString().padStart(2, '0')} ${period}`;
+        }
+
+        function saveData() {
+            localStorage.setItem('weeklyActivities', JSON.stringify(activities));
+            localStorage.setItem('activityId', activityId.toString());
+        }
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9898742e93a5b346',t:'MTc1OTYyMDQ4Ny4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
