@@ -351,40 +351,84 @@
             color: #d1d5db !important;
         }
         
-        /* Better contrast for light mode text */
-        .text-gray-700 {
-            color: #1f2937 !important;
-            text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
+        /* Default white text for all elements */
+        body, p, li, div, span, h1, h2, h3, h4, h5, h6, label {
+            color: white !important;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
         }
         
-        .text-gray-600 {
+        /* Navigation menu text stays dark */
+        header, header * {
             color: #374151 !important;
-            text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
+            text-shadow: none !important;
         }
         
-        .text-gray-500 {
-            color: #4b5563 !important;
-            text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
+        /* Control buttons text stays dark */
+        .bg-purple-300, .bg-purple-300 *,
+        .bg-blue-300, .bg-blue-300 *,
+        .bg-pink-300, .bg-pink-300 *,
+        .bg-indigo-300, .bg-indigo-300 *,
+        .bg-orange-300, .bg-orange-300 * {
+            color: #374151 !important;
+            text-shadow: none !important;
         }
         
-        /* Improve body text readability */
-        p, li, div {
-            color: #1f2937;
-            text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
+        /* Form inputs and selects stay dark */
+        input, select, textarea {
+            color: #374151 !important;
+            text-shadow: none !important;
         }
         
-        /* Ensure headings are dark enough */
-        h1, h2, h3, h4, h5, h6 {
-            color: #111827 !important;
-            text-shadow: 0 1px 3px rgba(255, 255, 255, 0.9);
-            font-weight: 600;
+        /* Placeholder text stays dark */
+        input::placeholder, select::placeholder, textarea::placeholder {
+            color: #6b7280 !important;
+            text-shadow: none !important;
         }
         
-        /* Better contrast for form labels */
-        label {
-            color: #111827 !important;
-            text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
-            font-weight: 500;
+        /* Container sections with their own backgrounds keep dark text */
+        .bg-purple-50, .bg-purple-50 *,
+        .bg-blue-50, .bg-blue-50 *,
+        .bg-green-50, .bg-green-50 *,
+        .bg-yellow-50, .bg-yellow-50 *,
+        .bg-gray-50, .bg-gray-50 *,
+        .bg-white, .bg-white *,
+        .bg-gray-100, .bg-gray-100 * {
+            color: #374151 !important;
+            text-shadow: none !important;
+        }
+        
+        /* Modal content keeps dark text */
+        .modal .bg-white, .modal .bg-white * {
+            color: #374151 !important;
+            text-shadow: none !important;
+        }
+        
+        /* Remove global hover effects - only apply to specific elements that need it */
+        /* Navigation hover colors */
+        header *:hover {
+            color: #8b5cf6 !important;
+            text-shadow: none !important;
+        }
+        
+        /* Keep container section text unchanged on hover */
+        .bg-purple-50 *:hover,
+        .bg-blue-50 *:hover,
+        .bg-green-50 *:hover,
+        .bg-yellow-50 *:hover,
+        .bg-gray-50 *:hover,
+        .bg-white *:hover,
+        .bg-gray-100 *:hover,
+        .modal .bg-white *:hover,
+        .bg-purple-300 *:hover,
+        .bg-blue-300 *:hover,
+        .bg-pink-300 *:hover,
+        .bg-indigo-300 *:hover,
+        .bg-orange-300 *:hover,
+        input:hover,
+        select:hover,
+        textarea:hover {
+            color: inherit !important;
+            text-shadow: inherit !important;
         }
         
         /* Improve placeholder text */
@@ -437,13 +481,18 @@
             background: rgba(255, 255, 255, 0.2) !important;
         }
         
-        .dark .bg-purple-50 {
+        .dark .bg-purple-50, .dark .bg-purple-50 * {
             background: rgba(139, 92, 246, 0.2) !important;
             color: white !important;
         }
         
-        .dark .bg-blue-50 {
+        .dark .bg-blue-50, .dark .bg-blue-50 * {
             background: rgba(59, 130, 246, 0.2) !important;
+            color: white !important;
+        }
+        
+        .dark .bg-gray-50, .dark .bg-gray-50 * {
+            background: rgba(255, 255, 255, 0.05) !important;
             color: white !important;
         }
         
@@ -2027,5 +2076,5 @@
             localStorage.setItem('activityId', activityId.toString());
         }
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'989cd01d1543b376',t:'MTc1OTY2NjE5Ni4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'989ce5de72c1b376',t:'MTc1OTY2NzA4Ny4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
