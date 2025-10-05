@@ -10,6 +10,11 @@
         body {
             box-sizing: border-box;
             font-family: 'Poppins', sans-serif;
+            background-image: url('https://cdn.midjourney.com/1301e007-9646-4460-8a6a-cacae9aec113/0_1.png');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
         }
         
         @media (prefers-reduced-motion: reduce) {
@@ -127,6 +132,7 @@
             font-size: 12px;
             color: #6b7280;
             padding-top: 4px;
+            justify-content: center;
         }
         
         .days-grid {
@@ -297,6 +303,36 @@
         .category-selfcare { background-color: #f59e0b; color: white; }
         .category-other { background-color: #8b5cf6; color: white; }
         
+        .glass-card {
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+        
+        .dark .glass-card {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            color: white;
+        }
+        
+        .dark h1, .dark h2, .dark h3, .dark h4, .dark h5, .dark h6 {
+            color: white;
+        }
+        
+        .dark .text-gray-800 {
+            color: white !important;
+        }
+        
+        .dark .text-gray-700 {
+            color: #e5e7eb !important;
+        }
+        
+        .dark .text-gray-600 {
+            color: #d1d5db !important;
+        }
+        
         .modal {
             backdrop-filter: blur(4px);
         }
@@ -318,14 +354,33 @@
         }
     </style>
 </head>
-<body class="bg-gradient-to-br from-blue-50 to-purple-50 min-h-screen transition-colors duration-300" id="body">
+<body class="min-h-screen transition-colors duration-300" id="body">
     <!-- Header -->
     <header class="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-50">
         <div class="container mx-auto px-4 py-4 flex justify-between items-center">
-            <h1 class="text-2xl md:text-3xl font-bold text-gray-800">Weekly Routine Builder</h1>
-            <button id="themeToggle" class="p-2 rounded-lg bg-gray-100 hover:bg-gray-200 transition-colors" aria-label="Toggle theme">
-                <span id="themeIcon">🌙</span>
-            </button>
+            <h1 class="text-2xl md:text-3xl font-bold text-gray-800 cursor-pointer" id="homeLink">Visionary Flow Week</h1>
+            <div class="flex items-center gap-6">
+                <nav class="hidden md:flex gap-6">
+                    <button id="showApp" class="text-gray-600 hover:text-purple-600 font-medium transition-colors">Flow</button>
+                    <button id="showAbout" class="text-gray-600 hover:text-purple-600 font-medium transition-colors">About</button>
+                    <button id="showContact" class="text-gray-600 hover:text-purple-600 font-medium transition-colors">Contact</button>
+                </nav>
+                <button id="themeToggle" class="p-2 rounded-lg bg-gray-100 hover:bg-gray-200 transition-colors" aria-label="Toggle theme">
+                    <span id="themeIcon">🌙</span>
+                </button>
+                <!-- Mobile menu button -->
+                <button id="mobileMenuToggle" class="md:hidden p-2 rounded-lg bg-gray-100 hover:bg-gray-200 transition-colors">
+                    <span id="mobileMenuIcon">☰</span>
+                </button>
+            </div>
+        </div>
+        <!-- Mobile menu -->
+        <div id="mobileMenu" class="md:hidden bg-white border-t border-gray-200 hidden">
+            <div class="container mx-auto px-4 py-3 flex flex-col gap-3">
+                <button id="showAppMobile" class="text-left text-gray-600 hover:text-purple-600 font-medium transition-colors">Flow</button>
+                <button id="showAboutMobile" class="text-left text-gray-600 hover:text-purple-600 font-medium transition-colors">About</button>
+                <button id="showContactMobile" class="text-left text-gray-600 hover:text-purple-600 font-medium transition-colors">Contact</button>
+            </div>
         </div>
     </header>
 
@@ -336,26 +391,49 @@
         </div>
     </div>
 
-    <div class="container mx-auto px-4 py-8 pb-16 max-w-7xl">
+    <!-- Home Page -->
+    <div id="homePage" class="container mx-auto px-4 py-16 pb-16 max-w-4xl">
+        <div class="glass-card rounded-2xl p-12 text-center">
+            <h1 class="text-4xl md:text-5xl font-bold text-gray-800 mb-6">Visionary Flow Week</h1>
+            <p class="text-xl text-gray-600 mb-12 max-w-2xl mx-auto">Transform your week from chaotic to intentional with our intuitive visual planning tool designed for visionaries.</p>
+            
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <button id="startPlanning" class="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-4 px-8 rounded-lg transition-colors duration-200 text-lg">
+                    Start Planning Your Week
+                </button>
+                <button id="learnMore" class="bg-white hover:bg-gray-50 text-purple-600 font-semibold py-4 px-8 rounded-lg border-2 border-purple-600 transition-colors duration-200 text-lg">
+                    Learn More
+                </button>
+            </div>
+            
+            <div class="mt-16 grid md:grid-cols-3 gap-8 text-left">
+                <div class="bg-white bg-opacity-50 p-6 rounded-xl">
+                    <div class="text-3xl mb-4">📅</div>
+                    <h3 class="text-lg font-semibold mb-2">Visual Calendar</h3>
+                    <p class="text-gray-600">See your entire week at a glance with color-coded activities and smart time management.</p>
+                </div>
+                <div class="bg-white bg-opacity-50 p-6 rounded-xl">
+                    <div class="text-3xl mb-4">⚖️</div>
+                    <h3 class="text-lg font-semibold mb-2">Perfect Balance</h3>
+                    <p class="text-gray-600">Track work, rest, and self-care to maintain a healthy, sustainable routine.</p>
+                </div>
+                <div class="bg-white bg-opacity-50 p-6 rounded-xl">
+                    <div class="text-3xl mb-4">📊</div>
+                    <h3 class="text-lg font-semibold mb-2">Weekly Insights</h3>
+                    <p class="text-gray-600">Get personalized suggestions and analytics to optimize your weekly flow.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content Container -->
+    <div id="mainContent" class="container mx-auto px-4 py-8 pb-16 max-w-7xl hidden">
         <!-- Setup Form -->
-        <div class="bg-white rounded-2xl shadow-lg p-6 mb-8">
+        <div class="glass-card rounded-2xl p-6 mb-8">
             <h2 class="text-2xl font-semibold text-gray-800 mb-6">Add Your Activities</h2>
             
             <form id="activityForm" class="space-y-4">
-                <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Day</label>
-                        <select id="daySelect" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
-                            <option value="monday">Monday</option>
-                            <option value="tuesday">Tuesday</option>
-                            <option value="wednesday">Wednesday</option>
-                            <option value="thursday">Thursday</option>
-                            <option value="friday">Friday</option>
-                            <option value="saturday">Saturday</option>
-                            <option value="sunday">Sunday</option>
-                        </select>
-                    </div>
-                    
+                <div class="grid md:grid-cols-3 gap-4">
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">Activity Name</label>
                         <input type="text" id="activityName" placeholder="e.g., Morning workout" 
@@ -384,37 +462,68 @@
                     </div>
                 </div>
                 
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-3">Days (select multiple for repeat activities)</label>
+                    <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-2">
+                        <label class="flex items-center space-x-2 p-2 border border-gray-300 rounded-lg hover:bg-gray-50 cursor-pointer">
+                            <input type="checkbox" value="monday" class="day-checkbox text-purple-600 focus:ring-purple-500">
+                            <span class="text-sm">Monday</span>
+                        </label>
+                        <label class="flex items-center space-x-2 p-2 border border-gray-300 rounded-lg hover:bg-gray-50 cursor-pointer">
+                            <input type="checkbox" value="tuesday" class="day-checkbox text-purple-600 focus:ring-purple-500">
+                            <span class="text-sm">Tuesday</span>
+                        </label>
+                        <label class="flex items-center space-x-2 p-2 border border-gray-300 rounded-lg hover:bg-gray-50 cursor-pointer">
+                            <input type="checkbox" value="wednesday" class="day-checkbox text-purple-600 focus:ring-purple-500">
+                            <span class="text-sm">Wednesday</span>
+                        </label>
+                        <label class="flex items-center space-x-2 p-2 border border-gray-300 rounded-lg hover:bg-gray-50 cursor-pointer">
+                            <input type="checkbox" value="thursday" class="day-checkbox text-purple-600 focus:ring-purple-500">
+                            <span class="text-sm">Thursday</span>
+                        </label>
+                        <label class="flex items-center space-x-2 p-2 border border-gray-300 rounded-lg hover:bg-gray-50 cursor-pointer">
+                            <input type="checkbox" value="friday" class="day-checkbox text-purple-600 focus:ring-purple-500">
+                            <span class="text-sm">Friday</span>
+                        </label>
+                        <label class="flex items-center space-x-2 p-2 border border-gray-300 rounded-lg hover:bg-gray-50 cursor-pointer">
+                            <input type="checkbox" value="saturday" class="day-checkbox text-purple-600 focus:ring-purple-500">
+                            <span class="text-sm">Saturday</span>
+                        </label>
+                        <label class="flex items-center space-x-2 p-2 border border-gray-300 rounded-lg hover:bg-gray-50 cursor-pointer">
+                            <input type="checkbox" value="sunday" class="day-checkbox text-purple-600 focus:ring-purple-500">
+                            <span class="text-sm">Sunday</span>
+                        </label>
+                    </div>
+                </div>
+                
                 <div id="timeValidation" class="text-red-600 text-sm hidden"></div>
                 
-                <div class="flex gap-4">
+                <div class="flex justify-center">
                     <button type="submit" class="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-200 min-w-44 min-h-11">
                         Add Activity
-                    </button>
-                    <button type="button" id="buildWeek" class="bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-200 min-w-44 min-h-11">
-                        Build My Week
                     </button>
                 </div>
             </form>
         </div>
 
         <!-- Controls -->
-        <div class="flex flex-wrap gap-4 mb-8">
-            <button id="viewFreeTime" class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 min-w-44 min-h-11">
+        <div class="flex flex-wrap gap-4 mb-8 justify-center">
+            <button id="viewFreeTime" class="bg-purple-300 hover:bg-purple-400 text-purple-800 font-medium py-2 px-4 rounded-lg transition-colors duration-200 min-w-44 min-h-11">
                 View Free Time
             </button>
-            <button id="showSummary" class="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 min-w-44 min-h-11">
+            <button id="showSummary" class="bg-blue-300 hover:bg-blue-400 text-blue-800 font-medium py-2 px-4 rounded-lg transition-colors duration-200 min-w-44 min-h-11">
                 Weekly Summary
             </button>
-            <button id="resetWeek" class="bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 min-w-44 min-h-11">
+            <button id="resetWeek" class="bg-pink-300 hover:bg-pink-400 text-pink-800 font-medium py-2 px-4 rounded-lg transition-colors duration-200 min-w-44 min-h-11">
                 Reset My Week
             </button>
-            <button id="exportWeek" class="bg-gray-600 hover:bg-gray-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 min-w-44 min-h-11">
+            <button id="exportWeek" class="bg-indigo-300 hover:bg-indigo-400 text-indigo-800 font-medium py-2 px-4 rounded-lg transition-colors duration-200 min-w-44 min-h-11">
                 Export Schedule
             </button>
         </div>
 
         <!-- Calendar -->
-        <div class="bg-white rounded-2xl shadow-lg p-6 mb-8">
+        <div class="glass-card rounded-2xl p-6 mb-8">
             <h2 class="text-2xl font-semibold text-gray-800 mb-6">Your Weekly Calendar</h2>
             
             <div class="calendar-container">
@@ -511,22 +620,94 @@
             </div>
         </div>
 
-        <!-- Help Modal -->
-        <div id="helpModal" class="fixed inset-0 bg-black bg-opacity-50 modal hidden z-50">
+        <!-- About Modal -->
+        <div id="aboutModal" class="fixed inset-0 bg-black bg-opacity-50 modal hidden z-50">
             <div class="flex items-center justify-center min-h-screen p-4">
-                <div class="bg-white rounded-2xl shadow-xl max-w-2xl w-full">
+                <div class="bg-white rounded-2xl shadow-xl max-w-3xl w-full max-h-90vh overflow-y-auto">
                     <div class="p-6">
                         <div class="flex justify-between items-center mb-6">
-                            <h2 class="text-2xl font-semibold text-gray-800">How to Use This App</h2>
-                            <button id="closeHelp" class="text-gray-500 hover:text-gray-700 text-2xl min-w-11 min-h-11">&times;</button>
+                            <h2 class="text-2xl font-semibold text-gray-800">About Visionary Flow Week</h2>
+                            <button id="closeAbout" class="text-gray-500 hover:text-gray-700 text-2xl min-w-11 min-h-11">&times;</button>
                         </div>
                         
-                        <div class="space-y-4 text-gray-700">
-                            <p><strong>1.</strong> Add your weekly activities with start and end times and choose a category.</p>
-                            <p><strong>2.</strong> Click Build My Week to generate your calendar.</p>
-                            <p><strong>3.</strong> Toggle View Free Time to see open blocks and assign an intention.</p>
-                            <p><strong>4.</strong> Open Weekly Summary to review where your time goes and spot balance opportunities.</p>
-                            <p><strong>5.</strong> Edit any activity by selecting its block; use Reset My Week to start over.</p>
+                        <div class="space-y-6 text-gray-700">
+                            <div>
+                                <h3 class="text-lg font-semibold mb-3 text-purple-600">Welcome to Your Weekly Routine Builder</h3>
+                                <p>Transform your week from chaotic to intentional with our intuitive visual planning tool. Designed for visionaries who want to create flow in their daily lives while maintaining balance across work, rest, and self-care.</p>
+                            </div>
+                            
+                            <div>
+                                <h3 class="text-lg font-semibold mb-3 text-purple-600">How to Use This App</h3>
+                                <div class="space-y-3">
+                                    <div class="flex items-start space-x-3">
+                                        <span class="bg-purple-100 text-purple-600 rounded-full w-6 h-6 flex items-center justify-center text-sm font-semibold flex-shrink-0 mt-0.5">1</span>
+                                        <p><strong>Add Your Activities:</strong> Select multiple days for repeat activities and add your weekly activities with start and end times. Choose from Work/Business, Rest, Self-Care, or Other categories.</p>
+                                    </div>
+                                    <div class="flex items-start space-x-3">
+                                        <span class="bg-purple-100 text-purple-600 rounded-full w-6 h-6 flex items-center justify-center text-sm font-semibold flex-shrink-0 mt-0.5">2</span>
+                                        <p><strong>Visual Calendar:</strong> Your calendar automatically updates as you add activities. See your entire week at a glance with color-coded categories.</p>
+                                    </div>
+                                    <div class="flex items-start space-x-3">
+                                        <span class="bg-purple-100 text-purple-600 rounded-full w-6 h-6 flex items-center justify-center text-sm font-semibold flex-shrink-0 mt-0.5">3</span>
+                                        <p><strong>Discover Free Time:</strong> Toggle "View Free Time" to see open blocks in your schedule and assign intentions to them.</p>
+                                    </div>
+                                    <div class="flex items-start space-x-3">
+                                        <span class="bg-purple-100 text-purple-600 rounded-full w-6 h-6 flex items-center justify-center text-sm font-semibold flex-shrink-0 mt-0.5">4</span>
+                                        <p><strong>Weekly Insights:</strong> Open "Weekly Summary" to review where your time goes, see category breakdowns, and get personalized balance suggestions.</p>
+                                    </div>
+                                    <div class="flex items-start space-x-3">
+                                        <span class="bg-purple-100 text-purple-600 rounded-full w-6 h-6 flex items-center justify-center text-sm font-semibold flex-shrink-0 mt-0.5">5</span>
+                                        <p><strong>Edit & Refine:</strong> Click any activity block to edit or delete it. Use "Reset My Week" to start fresh, or "Export Schedule" to save your plan.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <h3 class="text-lg font-semibold mb-3 text-purple-600">Features</h3>
+                                <div class="grid md:grid-cols-2 gap-4">
+                                    <div class="space-y-2">
+                                        <div class="flex items-center space-x-2">
+                                            <span class="text-green-500">✓</span>
+                                            <span>Visual weekly calendar</span>
+                                        </div>
+                                        <div class="flex items-center space-x-2">
+                                            <span class="text-green-500">✓</span>
+                                            <span>Color-coded categories</span>
+                                        </div>
+                                        <div class="flex items-center space-x-2">
+                                            <span class="text-green-500">✓</span>
+                                            <span>Free time discovery</span>
+                                        </div>
+                                        <div class="flex items-center space-x-2">
+                                            <span class="text-green-500">✓</span>
+                                            <span>Weekly analytics</span>
+                                        </div>
+                                    </div>
+                                    <div class="space-y-2">
+                                        <div class="flex items-center space-x-2">
+                                            <span class="text-green-500">✓</span>
+                                            <span>Export to Markdown</span>
+                                        </div>
+                                        <div class="flex items-center space-x-2">
+                                            <span class="text-green-500">✓</span>
+                                            <span>Responsive design</span>
+                                        </div>
+                                        <div class="flex items-center space-x-2">
+                                            <span class="text-green-500">✓</span>
+                                            <span>Local data storage</span>
+                                        </div>
+                                        <div class="flex items-center space-x-2">
+                                            <span class="text-green-500">✓</span>
+                                            <span>Balance suggestions</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="bg-gradient-to-r from-purple-50 to-blue-50 p-4 rounded-lg">
+                                <h3 class="text-lg font-semibold mb-2 text-purple-600">Part of Visionary In Progress</h3>
+                                <p class="text-sm">This tool is designed to help visionaries create intentional, balanced weeks that align with their goals and values. Join our community to discover more tools and resources for personal growth.</p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -536,17 +717,55 @@
         <!-- Contact Modal -->
         <div id="contactModal" class="fixed inset-0 bg-black bg-opacity-50 modal hidden z-50">
             <div class="flex items-center justify-center min-h-screen p-4">
-                <div class="bg-white rounded-2xl shadow-xl max-w-md w-full">
+                <div class="bg-white rounded-2xl shadow-xl max-w-2xl w-full">
                     <div class="p-6">
                         <div class="flex justify-between items-center mb-6">
-                            <h2 class="text-2xl font-semibold text-gray-800">Contact for Help</h2>
+                            <h2 class="text-2xl font-semibold text-gray-800">Contact & Support</h2>
                             <button id="closeContact" class="text-gray-500 hover:text-gray-700 text-2xl min-w-11 min-h-11">&times;</button>
                         </div>
                         
-                        <div class="text-gray-700">
-                            <p class="mb-4">Need help with the app? Contact our support team:</p>
-                            <p class="font-medium">your-support-link.com</p>
-                            <p class="text-sm text-gray-500 mt-4">For best performance, keep your device and browser up to date and maintain a stable internet connection.</p>
+                        <div class="space-y-6 text-gray-700">
+                            <div>
+                                <h3 class="text-lg font-semibold mb-3 text-purple-600">Get Help & Support</h3>
+                                <p class="mb-4">Need assistance with Visionary Flow Week? We're here to help you make the most of your weekly planning experience.</p>
+                            </div>
+                            
+                            <div class="grid md:grid-cols-2 gap-6">
+                                <div class="bg-purple-50 p-4 rounded-lg">
+                                    <h4 class="font-semibold mb-2 text-purple-700">Community Support</h4>
+                                    <p class="text-sm mb-3">Join our Visionary In Progress community for tips, discussions, and peer support.</p>
+                                    <a href="https://www.skool.com/visionary-in-progress-2668/about?ref=e0770bacec584dad84cc27ee0486c1bf" target="_blank" rel="noopener noreferrer" class="text-purple-600 hover:text-purple-700 font-medium text-sm">Visit Community →</a>
+                                </div>
+                                
+                                <div class="bg-blue-50 p-4 rounded-lg">
+                                    <h4 class="font-semibold mb-2 text-blue-700">Technical Issues</h4>
+                                    <p class="text-sm mb-3">Experiencing bugs or technical problems? Let us know so we can improve the app.</p>
+                                    <p class="text-blue-600 font-medium text-sm">support@visionaryflow.com</p>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <h3 class="text-lg font-semibold mb-3 text-purple-600">Frequently Asked Questions</h3>
+                                <div class="space-y-3">
+                                    <div>
+                                        <h4 class="font-medium mb-1">Is my data saved?</h4>
+                                        <p class="text-sm text-gray-600">Yes, your schedule is automatically saved to your browser's local storage. Your data stays private on your device.</p>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-medium mb-1">Can I use this on mobile?</h4>
+                                        <p class="text-sm text-gray-600">Absolutely! The app is fully responsive and works great on phones, tablets, and desktops.</p>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-medium mb-1">How do I export my schedule?</h4>
+                                        <p class="text-sm text-gray-600">Click "Export Schedule" to copy your weekly plan as formatted text that you can paste into any note-taking app.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="bg-gray-50 p-4 rounded-lg">
+                                <h4 class="font-semibold mb-2">System Requirements</h4>
+                                <p class="text-sm text-gray-600">For the best experience, use a modern web browser (Chrome, Firefox, Safari, Edge) and maintain a stable internet connection. The app works offline once loaded.</p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -607,7 +826,7 @@
                             <div id="editTimeValidation" class="text-red-600 text-sm hidden"></div>
                             
                             <div class="flex gap-3 pt-4">
-                                <button type="submit" class="flex-1 bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-200">
+                                <button type="submit" class="flex-1 bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-200">
                                     Save Changes
                                 </button>
                                 <button type="button" id="deleteActivity" class="flex-1 bg-red-600 hover:bg-red-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-200">
@@ -626,12 +845,191 @@
         </div>
     </div>
 
+    <!-- About Page -->
+    <div id="aboutPage" class="container mx-auto px-4 py-8 pb-16 max-w-4xl hidden">
+        <div class="glass-card rounded-2xl p-8">
+            <h1 class="text-3xl font-bold text-gray-800 mb-8">About Visionary Flow Week</h1>
+            
+            <div class="space-y-8 text-gray-700">
+                <div>
+                    <h2 class="text-2xl font-semibold mb-4 text-purple-600">Welcome to Your Weekly Routine Builder</h2>
+                    <p class="text-lg leading-relaxed">Transform your week from chaotic to intentional with our intuitive visual planning tool. Designed for visionaries who want to create flow in their daily lives while maintaining balance across work, rest, and self-care.</p>
+                </div>
+                
+                <div>
+                    <h2 class="text-2xl font-semibold mb-6 text-purple-600">How to Use This App</h2>
+                    <div class="space-y-6">
+                        <div class="flex items-start space-x-4">
+                            <span class="bg-purple-100 text-purple-600 rounded-full w-8 h-8 flex items-center justify-center text-lg font-bold flex-shrink-0 mt-1">1</span>
+                            <div>
+                                <h3 class="font-semibold text-lg mb-2">Add Your Activities</h3>
+                                <p>Select multiple days for repeat activities and add your weekly activities with start and end times. Choose from Work/Business, Rest, Self-Care, or Other categories.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start space-x-4">
+                            <span class="bg-purple-100 text-purple-600 rounded-full w-8 h-8 flex items-center justify-center text-lg font-bold flex-shrink-0 mt-1">2</span>
+                            <div>
+                                <h3 class="font-semibold text-lg mb-2">Visual Calendar</h3>
+                                <p>Your calendar automatically updates as you add activities. See your entire week at a glance with color-coded categories.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start space-x-4">
+                            <span class="bg-purple-100 text-purple-600 rounded-full w-8 h-8 flex items-center justify-center text-lg font-bold flex-shrink-0 mt-1">3</span>
+                            <div>
+                                <h3 class="font-semibold text-lg mb-2">Discover Free Time</h3>
+                                <p>Toggle "View Free Time" to see open blocks in your schedule and assign intentions to them.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start space-x-4">
+                            <span class="bg-purple-100 text-purple-600 rounded-full w-8 h-8 flex items-center justify-center text-lg font-bold flex-shrink-0 mt-1">4</span>
+                            <div>
+                                <h3 class="font-semibold text-lg mb-2">Weekly Insights</h3>
+                                <p>Open "Weekly Summary" to review where your time goes, see category breakdowns, and get personalized balance suggestions.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start space-x-4">
+                            <span class="bg-purple-100 text-purple-600 rounded-full w-8 h-8 flex items-center justify-center text-lg font-bold flex-shrink-0 mt-1">5</span>
+                            <div>
+                                <h3 class="font-semibold text-lg mb-2">Edit & Refine</h3>
+                                <p>Click any activity block to edit or delete it. Use "Reset My Week" to start fresh, or "Export Schedule" to save your plan.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div>
+                    <h2 class="text-2xl font-semibold mb-6 text-purple-600">Features</h2>
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div class="space-y-3">
+                            <div class="flex items-center space-x-3">
+                                <span class="text-green-500 text-xl">✓</span>
+                                <span class="text-lg">Visual weekly calendar</span>
+                            </div>
+                            <div class="flex items-center space-x-3">
+                                <span class="text-green-500 text-xl">✓</span>
+                                <span class="text-lg">Color-coded categories</span>
+                            </div>
+                            <div class="flex items-center space-x-3">
+                                <span class="text-green-500 text-xl">✓</span>
+                                <span class="text-lg">Free time discovery</span>
+                            </div>
+                            <div class="flex items-center space-x-3">
+                                <span class="text-green-500 text-xl">✓</span>
+                                <span class="text-lg">Weekly analytics</span>
+                            </div>
+                        </div>
+                        <div class="space-y-3">
+                            <div class="flex items-center space-x-3">
+                                <span class="text-green-500 text-xl">✓</span>
+                                <span class="text-lg">Export to Markdown</span>
+                            </div>
+                            <div class="flex items-center space-x-3">
+                                <span class="text-green-500 text-xl">✓</span>
+                                <span class="text-lg">Responsive design</span>
+                            </div>
+                            <div class="flex items-center space-x-3">
+                                <span class="text-green-500 text-xl">✓</span>
+                                <span class="text-lg">Local data storage</span>
+                            </div>
+                            <div class="flex items-center space-x-3">
+                                <span class="text-green-500 text-xl">✓</span>
+                                <span class="text-lg">Balance suggestions</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-gradient-to-r from-purple-50 to-blue-50 p-6 rounded-xl">
+                    <h2 class="text-2xl font-semibold mb-3 text-purple-600">Part of Visionary In Progress</h2>
+                    <p class="text-lg leading-relaxed">This tool is designed to help visionaries create intentional, balanced weeks that align with their goals and values. Join our community to discover more tools and resources for personal growth.</p>
+                    <a href="https://www.skool.com/visionary-in-progress-2668/about?ref=e0770bacec584dad84cc27ee0486c1bf" target="_blank" rel="noopener noreferrer" class="inline-block mt-4 bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors">
+                        Join Our Community →
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contact Page -->
+    <div id="contactPage" class="container mx-auto px-4 py-8 pb-16 max-w-4xl hidden">
+        <div class="glass-card rounded-2xl p-8">
+            <h1 class="text-3xl font-bold text-gray-800 mb-8">Contact & Support</h1>
+            
+            <div class="space-y-8 text-gray-700">
+                <div>
+                    <h2 class="text-2xl font-semibold mb-4 text-purple-600">Get Help & Support</h2>
+                    <p class="text-lg leading-relaxed mb-6">Need assistance with Visionary Flow Week? We're here to help you make the most of your weekly planning experience.</p>
+                </div>
+                
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div class="bg-purple-50 p-6 rounded-xl">
+                        <h3 class="text-xl font-semibold mb-3 text-purple-700">Community Support</h3>
+                        <p class="mb-4 leading-relaxed">Join our Visionary In Progress community for tips, discussions, and peer support from fellow visionaries building better routines.</p>
+                        <a href="https://www.skool.com/visionary-in-progress-2668/about?ref=e0770bacec584dad84cc27ee0486c1bf" target="_blank" rel="noopener noreferrer" class="inline-block bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors">
+                            Visit Community →
+                        </a>
+                    </div>
+                    
+                    <div class="bg-blue-50 p-6 rounded-xl">
+                        <h3 class="text-xl font-semibold mb-3 text-blue-700">Technical Issues</h3>
+                        <p class="mb-4 leading-relaxed">Experiencing bugs or technical problems? Let us know so we can improve the app for everyone.</p>
+                        <div class="bg-white p-3 rounded-lg border">
+                            <p class="text-blue-600 font-semibold">support@visionaryflow.com</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div>
+                    <h2 class="text-2xl font-semibold mb-4 text-purple-600">About Visionary In Progress</h2>
+                    <p class="text-lg leading-relaxed mb-6">Visionary In Progress is a soft productivity community for women building digital offers with AI and story, with soul, strategy, and zero pressure. Expect prompts, monthly projects, co-working, and a resource vault. We do vibes and invoices, with a gentle rhythm that protects your peace.</p>
+                    
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        <a href="https://affirmedvisionary.store" target="_blank" rel="noopener noreferrer" class="text-center p-3 bg-white rounded-xl border hover:bg-gray-50 transition-colors font-medium">Website</a>
+                        <a href="https://affirmedvisionary.substack.com" target="_blank" rel="noopener noreferrer" class="text-center p-3 bg-white rounded-xl border hover:bg-gray-50 transition-colors font-medium">Substack</a>
+                        <a href="https://tiktok.com/@justvisionary" target="_blank" rel="noopener noreferrer" class="text-center p-3 bg-white rounded-xl border hover:bg-gray-50 transition-colors font-medium">TikTok</a>
+                        <a href="https://instagram.com/aiwith.vip" target="_blank" rel="noopener noreferrer" class="text-center p-3 bg-white rounded-xl border hover:bg-gray-50 transition-colors font-medium">Instagram</a>
+                        <a href="https://pinterest.com/affirmedvisionary" target="_blank" rel="noopener noreferrer" class="text-center p-3 bg-white rounded-xl border hover:bg-gray-50 transition-colors font-medium">Pinterest</a>
+                        <a href="https://youtube.com/@affirmedvisionary" target="_blank" rel="noopener noreferrer" class="text-center p-3 bg-white rounded-xl border hover:bg-gray-50 transition-colors font-medium">YouTube</a>
+                        <a href="https://discord.gg/affirmedvisionary" target="_blank" rel="noopener noreferrer" class="text-center p-3 bg-white rounded-xl border hover:bg-gray-50 transition-colors font-medium">Discord</a>
+                        <a href="https://www.skool.com/visionary-in-progress-2668/about?ref=e0770bacec584dad84cc27ee0486c1bf" target="_blank" rel="noopener noreferrer" class="text-center p-3 bg-white rounded-xl border hover:bg-gray-50 transition-colors font-medium">Skool</a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h2 class="text-2xl font-semibold mb-6 text-purple-600">Frequently Asked Questions</h2>
+                    <div class="space-y-6">
+                        <div class="bg-gray-50 p-6 rounded-xl">
+                            <h3 class="text-lg font-semibold mb-2">Is my data saved?</h3>
+                            <p class="leading-relaxed">Yes, your schedule is automatically saved to your browser's local storage. Your data stays private on your device and is never sent to external servers.</p>
+                        </div>
+                        <div class="bg-gray-50 p-6 rounded-xl">
+                            <h3 class="text-lg font-semibold mb-2">Can I use this on mobile?</h3>
+                            <p class="leading-relaxed">Absolutely! The app is fully responsive and works great on phones, tablets, and desktops. The interface adapts to your screen size for the best experience.</p>
+                        </div>
+                        <div class="bg-gray-50 p-6 rounded-xl">
+                            <h3 class="text-lg font-semibold mb-2">How do I export my schedule?</h3>
+                            <p class="leading-relaxed">Click "Export Schedule" to copy your weekly plan as formatted Markdown text that you can paste into any note-taking app, document, or planning tool.</p>
+                        </div>
+                        <div class="bg-gray-50 p-6 rounded-xl">
+                            <h3 class="text-lg font-semibold mb-2">Can I share my schedule with others?</h3>
+                            <p class="leading-relaxed">Currently, schedules are stored locally on your device. You can export your schedule as text and share it manually, or take screenshots of your visual calendar.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-gradient-to-r from-gray-50 to-blue-50 p-6 rounded-xl">
+                    <h3 class="text-xl font-semibold mb-3">System Requirements</h3>
+                    <p class="leading-relaxed">For the best experience, use a modern web browser (Chrome, Firefox, Safari, Edge) and maintain a stable internet connection. The app works offline once loaded and doesn't require any downloads or installations.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Footer -->
     <footer class="bg-white border-t border-gray-200 py-6">
         <div class="container mx-auto px-4 text-center">
-            <div class="flex justify-center gap-4">
-                <button id="showHelp" class="text-blue-600 hover:text-blue-700 font-medium min-w-44 min-h-11">How to Use This App</button>
-                <button id="showContact" class="text-blue-600 hover:text-blue-700 font-medium min-w-44 min-h-11">Contact for Help</button>
+            <div class="text-sm text-gray-600">
+                © 2025 Visionary Flow Week · <a href="https://www.skool.com/visionary-in-progress-2668/about?ref=e0770bacec584dad84cc27ee0486c1bf" target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:text-blue-700">Visionary In Progress</a> · All Rights Reserved
             </div>
         </div>
     </footer>
@@ -690,7 +1088,6 @@
             document.getElementById('endTime').addEventListener('change', validateTimes);
             
             // Control buttons
-            document.getElementById('buildWeek').addEventListener('click', buildWeek);
             document.getElementById('viewFreeTime').addEventListener('click', toggleFreeTime);
             document.getElementById('showSummary').addEventListener('click', showWeeklySummary);
             document.getElementById('resetWeek').addEventListener('click', resetWeek);
@@ -702,12 +1099,31 @@
             // Expand hours toggle
             document.getElementById('expandHours').addEventListener('click', toggleExpandHours);
             
+            // Navigation
+            document.getElementById('homeLink').addEventListener('click', () => showPage('home'));
+            document.getElementById('showApp').addEventListener('click', () => showPage('app'));
+            document.getElementById('showAbout').addEventListener('click', () => showPage('about'));
+            document.getElementById('showContact').addEventListener('click', () => showPage('contact'));
+            document.getElementById('showAppMobile').addEventListener('click', () => {
+                showPage('app');
+                toggleMobileMenu();
+            });
+            document.getElementById('showAboutMobile').addEventListener('click', () => {
+                showPage('about');
+                toggleMobileMenu();
+            });
+            document.getElementById('showContactMobile').addEventListener('click', () => {
+                showPage('contact');
+                toggleMobileMenu();
+            });
+            
+            // Home page buttons
+            document.getElementById('startPlanning').addEventListener('click', () => showPage('app'));
+            document.getElementById('learnMore').addEventListener('click', () => showPage('about'));
+            document.getElementById('mobileMenuToggle').addEventListener('click', toggleMobileMenu);
+            
             // Modal controls
             document.getElementById('closeSummary').addEventListener('click', () => hideModal('summaryModal'));
-            document.getElementById('showHelp').addEventListener('click', () => showModal('helpModal'));
-            document.getElementById('closeHelp').addEventListener('click', () => hideModal('helpModal'));
-            document.getElementById('showContact').addEventListener('click', () => showModal('contactModal'));
-            document.getElementById('closeContact').addEventListener('click', () => hideModal('contactModal'));
             document.getElementById('closeEditActivity').addEventListener('click', () => hideModal('editActivityModal'));
             
             // Edit activity form
@@ -730,23 +1146,31 @@
             e.preventDefault();
             
             const name = document.getElementById('activityName').value.trim();
-            const day = document.getElementById('daySelect').value;
+            const selectedDays = Array.from(document.querySelectorAll('.day-checkbox:checked')).map(cb => cb.value);
             const category = document.getElementById('categorySelect').value;
             const startTime = document.getElementById('startTime').value;
             const endTime = document.getElementById('endTime').value;
             
+            if (selectedDays.length === 0) {
+                alert('Please select at least one day for this activity.');
+                return;
+            }
+            
             if (!validateTimes()) return;
             
-            const activity = {
-                id: activityId++,
-                name,
-                day,
-                category,
-                startTime,
-                endTime
-            };
+            // Create activity for each selected day
+            selectedDays.forEach(day => {
+                const activity = {
+                    id: activityId++,
+                    name,
+                    day,
+                    category,
+                    startTime,
+                    endTime
+                };
+                activities.push(activity);
+            });
             
-            activities.push(activity);
             saveData();
             renderActivities();
             
@@ -1107,29 +1531,18 @@
             return true;
         }
 
-        function buildWeek() {
-            renderActivities();
-            
-            // Success animation
-            const btn = document.getElementById('buildWeek');
-            btn.classList.add('success-check');
-            setTimeout(() => btn.classList.remove('success-check'), 600);
-            
-            checkWeekCompletion();
-        }
-
         function toggleFreeTime() {
             showingFreeTime = !showingFreeTime;
             const btn = document.getElementById('viewFreeTime');
             
             if (showingFreeTime) {
                 btn.textContent = 'Hide Free Time';
-                btn.classList.remove('bg-blue-600', 'hover:bg-blue-700');
-                btn.classList.add('bg-orange-600', 'hover:bg-orange-700');
+                btn.classList.remove('bg-purple-300', 'hover:bg-purple-400', 'text-purple-800');
+                btn.classList.add('bg-orange-300', 'hover:bg-orange-400', 'text-orange-800');
             } else {
                 btn.textContent = 'View Free Time';
-                btn.classList.remove('bg-orange-600', 'hover:bg-orange-700');
-                btn.classList.add('bg-blue-600', 'hover:bg-blue-700');
+                btn.classList.remove('bg-orange-300', 'hover:bg-orange-400', 'text-orange-800');
+                btn.classList.add('bg-purple-300', 'hover:bg-purple-400', 'text-purple-800');
             }
             
             renderActivities();
@@ -1424,6 +1837,41 @@
             document.getElementById(modalId).classList.add('hidden');
         }
 
+        function showPage(page) {
+            // Hide all pages
+            document.getElementById('homePage').classList.add('hidden');
+            document.getElementById('mainContent').classList.add('hidden');
+            document.getElementById('aboutPage').classList.add('hidden');
+            document.getElementById('contactPage').classList.add('hidden');
+            
+            // Show selected page
+            if (page === 'home') {
+                document.getElementById('homePage').classList.remove('hidden');
+            } else if (page === 'app') {
+                document.getElementById('mainContent').classList.remove('hidden');
+            } else if (page === 'about') {
+                document.getElementById('aboutPage').classList.remove('hidden');
+            } else if (page === 'contact') {
+                document.getElementById('contactPage').classList.remove('hidden');
+            }
+            
+            // Scroll to top
+            window.scrollTo(0, 0);
+        }
+
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            const icon = document.getElementById('mobileMenuIcon');
+            
+            if (menu.classList.contains('hidden')) {
+                menu.classList.remove('hidden');
+                icon.textContent = '✕';
+            } else {
+                menu.classList.add('hidden');
+                icon.textContent = '☰';
+            }
+        }
+
         // Utility functions
         function timeToMinutes(timeString) {
             const [hours, minutes] = timeString.split(':').map(Number);
@@ -1448,5 +1896,5 @@
             localStorage.setItem('activityId', activityId.toString());
         }
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9898742e93a5b346',t:'MTc1OTYyMDQ4Ny4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9899010921e7b346',t:'MTc1OTYyNjI1Ny4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
