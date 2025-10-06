@@ -164,15 +164,24 @@
         .day-header {
             position: sticky;
             top: 120px;
-            background: #46454563;
-            box-shadow: 0 5px 5px
-            border-radius: 0.5rem
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.2) 0%, rgba(59, 130, 246, 0.2) 100%);
             z-index: 20;
             padding: 12px 0;
+            border-bottom: none;
+            box-shadow: 0 5px 5px rgba(0, 0, 0, 0.1);
+            border-radius: 0.5rem;
             margin-bottom: 8px;
             font-weight: 600;
             text-align: center;
             color: #374151;
+        }
+        
+        .dark .day-header {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.2) 0%, rgba(59, 130, 246, 0.2) 100%);
+            color: white;
+            border-bottom: none;
+            box-shadow: 0 5px 5px rgba(0, 0, 0, 0.1);
+            border-radius: 0.5rem;
         }
         
         .day-content {
@@ -269,8 +278,18 @@
         }
         
         .expand-hours-btn:hover {
-            background: #f9fafb;
+            background: #46454580;
             border-color: #d1d5db;
+        }
+        
+        .dark .expand-hours-btn {
+            background: #46454563;
+            color: white;
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+        
+        .dark .expand-hours-btn:hover {
+            background: #46454580;
         }
         
         /* Responsive Grid */
@@ -380,12 +399,11 @@
             text-shadow: none !important;
         }
         
-        /* Placeholder text stays dark */
+        /* Placeholder text stays dark in light mode */
         input::placeholder, select::placeholder, textarea::placeholder {
             color: #6b7280 !important;
             text-shadow: none !important;
         }
-
         
         /* Container sections with their own backgrounds keep dark text */
         .bg-purple-50, .bg-purple-50 *,
@@ -426,11 +444,18 @@
         .bg-pink-300 *:hover,
         .bg-indigo-300 *:hover,
         .bg-orange-300 *:hover,
+        .feature-card *:hover,
         input:hover,
         select:hover,
         textarea:hover {
             color: inherit !important;
             text-shadow: inherit !important;
+        }
+        
+        .dark input:hover,
+        .dark select:hover,
+        .dark textarea:hover {
+            color: white !important;
         }
         
         /* Improve placeholder text */
@@ -444,20 +469,42 @@
             color: white;
         }
         
-        .dark input::placeholder {
-            color: #9ca3af;
+        .dark input::placeholder, .dark textarea::placeholder, .dark select {
+            color: white !important;
         }
-
-                /* Improve placeholder text */
-        .dark input::placeholder,
-        .dark textarea::placeholder {
-            color: #fff !important;
+        
+        .dark input[type="time"]::-webkit-datetime-edit-text {
+            color: white !important;
+        }
+        
+        .dark input[type="time"]::-webkit-datetime-edit-hour-field,
+        .dark input[type="time"]::-webkit-datetime-edit-minute-field {
+            color: white !important;
         }
         
         .dark button {
             background: rgba(255, 255, 255, 0.1);
             color: white;
             border-color: rgba(255, 255, 255, 0.2);
+        }
+        
+        /* Dark mode control buttons - keep white text on hover */
+        .dark .bg-purple-300, .dark .bg-purple-300 *,
+        .dark .bg-blue-300, .dark .bg-blue-300 *,
+        .dark .bg-pink-300, .dark .bg-pink-300 *,
+        .dark .bg-indigo-300, .dark .bg-indigo-300 *,
+        .dark .bg-orange-300, .dark .bg-orange-300 * {
+            color: white !important;
+            text-shadow: none !important;
+        }
+        
+        .dark .bg-purple-300:hover, .dark .bg-purple-300:hover *,
+        .dark .bg-blue-300:hover, .dark .bg-blue-300:hover *,
+        .dark .bg-pink-300:hover, .dark .bg-pink-300:hover *,
+        .dark .bg-indigo-300:hover, .dark .bg-indigo-300:hover *,
+        .dark .bg-orange-300:hover, .dark .bg-orange-300:hover * {
+            color: white !important;
+            text-shadow: none !important;
         }
         
         .dark .bg-white {
@@ -595,20 +642,20 @@
             </div>
             
             <div class="mt-16 grid md:grid-cols-3 gap-8 text-left">
-                <div class="bg-white bg-opacity-50 p-6 rounded-xl">
+                <div class="glass-card p-6 rounded-xl feature-card" style="background: linear-gradient(135deg, rgba(139, 92, 246, 0.2) 0%, rgba(59, 130, 246, 0.2) 100%);">
                     <div class="text-3xl mb-4">📅</div>
-                    <h3 class="text-lg font-semibold mb-2">Visual Calendar</h3>
-                    <p class="text-gray-600">See your entire week at a glance with colour-coded activities and smart time management.</p>
+                    <h3 class="text-lg font-semibold mb-2 text-white">Visual Calendar</h3>
+                    <p class="text-white">See your entire week at a glance with color-coded activities and smart time management.</p>
                 </div>
-                <div class="bg-white bg-opacity-50 p-6 rounded-xl">
+                <div class="glass-card p-6 rounded-xl feature-card" style="background: linear-gradient(135deg, rgba(139, 92, 246, 0.2) 0%, rgba(59, 130, 246, 0.2) 100%);">
                     <div class="text-3xl mb-4">⚖️</div>
-                    <h3 class="text-lg font-semibold mb-2">Perfect Balance</h3>
-                    <p class="text-gray-600">Track work, rest, and self-care to maintain a healthy, sustainable routine.</p>
+                    <h3 class="text-lg font-semibold mb-2 text-white">Perfect Balance</h3>
+                    <p class="text-white">Track work, rest, and self-care to maintain a healthy, sustainable routine.</p>
                 </div>
-                <div class="bg-white bg-opacity-50 p-6 rounded-xl">
+                <div class="glass-card p-6 rounded-xl feature-card" style="background: linear-gradient(135deg, rgba(139, 92, 246, 0.2) 0%, rgba(59, 130, 246, 0.2) 100%);">
                     <div class="text-3xl mb-4">📊</div>
-                    <h3 class="text-lg font-semibold mb-2">Weekly Insights</h3>
-                    <p class="text-gray-600">Get personalised suggestions and analytics to optimise your weekly flow.</p>
+                    <h3 class="text-lg font-semibold mb-2 text-white">Weekly Insights</h3>
+                    <p class="text-white">Get personalized suggestions and analytics to optimize your weekly flow.</p>
                 </div>
             </div>
         </div>
@@ -653,31 +700,31 @@
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-3">Days (select multiple for repeat activities)</label>
                     <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-2">
-                        <label class="flex items-center space-x-2 p-2 border border-gray-300 rounded-lg hover:bg-gray-50 cursor-pointer">
+                        <label class="flex items-center space-x-2 p-2 border border-gray-300 rounded-lg hover:shadow-md cursor-pointer transition-shadow">
                             <input type="checkbox" value="monday" class="day-checkbox text-purple-600 focus:ring-purple-500">
                             <span class="text-sm">Monday</span>
                         </label>
-                        <label class="flex items-center space-x-2 p-2 border border-gray-300 rounded-lg hover:bg-gray-50 cursor-pointer">
+                        <label class="flex items-center space-x-2 p-2 border border-gray-300 rounded-lg hover:shadow-md cursor-pointer transition-shadow">
                             <input type="checkbox" value="tuesday" class="day-checkbox text-purple-600 focus:ring-purple-500">
                             <span class="text-sm">Tuesday</span>
                         </label>
-                        <label class="flex items-center space-x-2 p-2 border border-gray-300 rounded-lg hover:bg-gray-50 cursor-pointer">
+                        <label class="flex items-center space-x-2 p-2 border border-gray-300 rounded-lg hover:shadow-md cursor-pointer transition-shadow">
                             <input type="checkbox" value="wednesday" class="day-checkbox text-purple-600 focus:ring-purple-500">
                             <span class="text-sm">Wednesday</span>
                         </label>
-                        <label class="flex items-center space-x-2 p-2 border border-gray-300 rounded-lg hover:bg-gray-50 cursor-pointer">
+                        <label class="flex items-center space-x-2 p-2 border border-gray-300 rounded-lg hover:shadow-md cursor-pointer transition-shadow">
                             <input type="checkbox" value="thursday" class="day-checkbox text-purple-600 focus:ring-purple-500">
                             <span class="text-sm">Thursday</span>
                         </label>
-                        <label class="flex items-center space-x-2 p-2 border border-gray-300 rounded-lg hover:bg-gray-50 cursor-pointer">
+                        <label class="flex items-center space-x-2 p-2 border border-gray-300 rounded-lg hover:shadow-md cursor-pointer transition-shadow">
                             <input type="checkbox" value="friday" class="day-checkbox text-purple-600 focus:ring-purple-500">
                             <span class="text-sm">Friday</span>
                         </label>
-                        <label class="flex items-center space-x-2 p-2 border border-gray-300 rounded-lg hover:bg-gray-50 cursor-pointer">
+                        <label class="flex items-center space-x-2 p-2 border border-gray-300 rounded-lg hover:shadow-md cursor-pointer transition-shadow">
                             <input type="checkbox" value="saturday" class="day-checkbox text-purple-600 focus:ring-purple-500">
                             <span class="text-sm">Saturday</span>
                         </label>
-                        <label class="flex items-center space-x-2 p-2 border border-gray-300 rounded-lg hover:bg-gray-50 cursor-pointer">
+                        <label class="flex items-center space-x-2 p-2 border border-gray-300 rounded-lg hover:shadow-md cursor-pointer transition-shadow">
                             <input type="checkbox" value="sunday" class="day-checkbox text-purple-600 focus:ring-purple-500">
                             <span class="text-sm">Sunday</span>
                         </label>
@@ -841,7 +888,7 @@
                                     </div>
                                     <div class="flex items-start space-x-3">
                                         <span class="bg-purple-100 text-purple-600 rounded-full w-6 h-6 flex items-center justify-center text-sm font-semibold flex-shrink-0 mt-0.5">4</span>
-                                        <p><strong>Weekly Insights:</strong> Open "Weekly Summary" to review where your time goes, see category breakdowns, and get personalised balance suggestions.</p>
+                                        <p><strong>Weekly Insights:</strong> Open "Weekly Summary" to review where your time goes, see category breakdowns, and get personalized balance suggestions.</p>
                                     </div>
                                     <div class="flex items-start space-x-3">
                                         <span class="bg-purple-100 text-purple-600 rounded-full w-6 h-6 flex items-center justify-center text-sm font-semibold flex-shrink-0 mt-0.5">5</span>
@@ -1058,7 +1105,7 @@
                             <span class="bg-purple-100 text-purple-600 rounded-full w-8 h-8 flex items-center justify-center text-lg font-bold flex-shrink-0 mt-1">2</span>
                             <div>
                                 <h3 class="font-semibold text-lg mb-2">Visual Calendar</h3>
-                                <p>Your calendar automatically updates as you add activities. See your entire week at a glance with colour-coded categories.</p>
+                                <p>Your calendar automatically updates as you add activities. See your entire week at a glance with color-coded categories.</p>
                             </div>
                         </div>
                         <div class="flex items-start space-x-4">
@@ -1072,7 +1119,7 @@
                             <span class="bg-purple-100 text-purple-600 rounded-full w-8 h-8 flex items-center justify-center text-lg font-bold flex-shrink-0 mt-1">4</span>
                             <div>
                                 <h3 class="font-semibold text-lg mb-2">Weekly Insights</h3>
-                                <p>Open "Weekly Summary" to review where your time goes, see category breakdowns, and get personalised balance suggestions.</p>
+                                <p>Open "Weekly Summary" to review where your time goes, see category breakdowns, and get personalized balance suggestions.</p>
                             </div>
                         </div>
                         <div class="flex items-start space-x-4">
@@ -1457,9 +1504,9 @@
             const expandText = document.getElementById('expandText');
             
             if (expandedHours) {
-                expandText.textContent = 'Collapse hours';
+                expandText.textContent = 'Less hours';
             } else {
-                expandText.textContent = 'Expand hours';
+                expandText.textContent = 'More hours';
             }
             
             generateCalendar();
@@ -2084,5 +2131,5 @@
             localStorage.setItem('activityId', activityId.toString());
         }
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'989f04246380b376',t:'MTc1OTY4OTI5OS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'98a1602b4778b346',t:'MTc1OTcxNDAzOS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
